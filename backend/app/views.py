@@ -20,12 +20,11 @@ def teardown_request(exception):
 
 @app.route('/ongs', methods=['GET'])
 def ongs_list():
-    data = {}
     cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(f"SELECT * FROM ongs")
-    data['ongs'] = cur.fetchall()
+    ongs = cur.fetchall()
     cur.close()
-    return data
+    return jsonify(ongs)
 
 
 @app.route('/ongs', methods=['POST'])
@@ -39,4 +38,4 @@ def ongs_new():
                 f"VALUES ('{id}','{new['name']}','{new['email']}','{new['whatsapp']}','{new['city']}','{new['uf']}')")
     g.db.commit()
     cur.close()
-    return jsonify({'task': request.json}), 201
+    return jsonify({"id": id}), 201
