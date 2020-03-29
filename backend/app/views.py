@@ -62,3 +62,16 @@ def incidents_new():
     cur.close()
 
     return {}, 201
+
+
+@app.route('/incidents/<int:incident_pk>', methods=['GET'])
+def incidents_detail(incident_pk):
+    cur = get_db().cursor()
+    cur.execute(f"SELECT * FROM incidents WHERE id={incident_pk}")
+    incident = cur.fetchone()
+    cur.close()
+
+    if incident is None:
+        abort(404)
+
+    return jsonify(incident)
