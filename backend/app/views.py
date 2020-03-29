@@ -6,6 +6,7 @@ from utils import generateUniqueId
 
 from db.connection import get_db
 
+
 # Ong
 
 @app.route('/ongs', methods=['GET'])
@@ -118,3 +119,16 @@ def incidents_delete(incident_pk):
     cur.close()
 
     return jsonify({'result': True})
+
+
+# Profile
+
+@app.route('/profile', methods=['GET'])
+def profile():
+    ong_id = request.headers['authorization']
+
+    cur = get_db().cursor()
+    cur.execute(f"SELECT * FROM incidents WHERE ong_id='{ong_id}'")
+    incidents = cur.fetchall()
+
+    return jsonify(incidents)
