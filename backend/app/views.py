@@ -75,3 +75,25 @@ def incidents_detail(incident_pk):
         abort(404)
 
     return jsonify(incident)
+
+
+@app.route('/incidents/<int:incident_pk>', methods=['DELETE'])
+def incidents_delete(incident_pk):
+    ong_id = request.headers['authorization']
+
+    cur = get_db().cursor()
+    cur.execute(f"SELECT ong_id FROM incidents WHERE id={incident_pk}")
+    incident = cur.fetchone()
+
+    if incident is None:
+        abort(404)
+
+    if incident['ong_id'] != ong_id:
+        abort(401)
+
+    # Deleting
+    cur.execute(f"DELETE FROM incidents WHERE id={incident_pk} AND ong_id='{ong_id}'")
+    get_db().commit()
+    cur.close()
+
+    return jsonify({'result': True})
