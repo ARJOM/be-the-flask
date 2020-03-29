@@ -35,6 +35,21 @@ def ongs_new():
     return jsonify({"id": id}), 201
 
 
+@app.route('/sessions', methods=['post'])
+def login():
+    id = request.json["id"]
+
+    cur = get_db().cursor()
+    cur.execute(f"SELECT name FROM ongs WHERE id='{id}'")
+    ong = cur.fetchone()
+    cur.close()
+
+    if ong is None:
+        abort(404)
+
+    return jsonify(ong)
+
+
 # Incident
 
 @app.route('/incidents', methods=['GET'])
