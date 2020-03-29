@@ -40,7 +40,7 @@ def ongs_new():
 @app.route('/incidents', methods=['GET'])
 def incidents_list():
     cur = get_db().cursor()
-    cur.execute(f"SELECT * FROM incidents")
+    cur.execute(f"SELECT i.*, o.name, o.email, o.whatsapp, o.city, o.uf FROM incidents i, ongs o WHERE i.ong_id=o.id")
     incidents = cur.fetchall()
     cur.close()
 
@@ -56,6 +56,12 @@ def incidents_new():
     new = request.json
 
     cur = get_db().cursor()
+
+    cur.execute(f"SELECT * FROM ongs WHERE id='{ong_id}'")
+    ong = cur.fetchone()
+    if ong is None:
+        abort(404)
+
     cur.execute(f"INSERT INTO incidents(title, description, value, ong_id) "
                 f"VALUES ('{new['title']}','{new['description']}',{new['value']},'{ong_id}')")
     get_db().commit()
