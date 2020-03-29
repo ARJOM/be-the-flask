@@ -39,3 +39,28 @@ def ongs_new():
     g.db.commit()
     cur.close()
     return jsonify({"id": id}), 201
+
+
+# Incident
+
+@app.route('/incidents', methods=['GET'])
+def incidents_list():
+    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute(f"SELECT * FROM incident")
+    incidents = cur.fetchall()
+    cur.close()
+    return jsonify(incidents)
+
+
+@app.route('/incidents', methods=['post'])
+def incidents_new():
+    if not request.json:
+        abort(404)
+    ong_id = request.headers['authorization']
+    new = request.json
+    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute(f"INSERT INTO incidents(title, description, value, ong_id) "
+                f"VALUES ('{new['title']}','{new['description']}',{new['value']},'{ong_id}')")
+    g.db.commit()
+    cur.close()
+    return {}, 201
