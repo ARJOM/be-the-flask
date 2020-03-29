@@ -7,7 +7,7 @@ CREATE TABLE ongs(
 	uf varchar(2) not NULL
 );
 
-CREATE TABLE incident(
+CREATE TABLE incidents(
 	id serial primary key,
 	title varchar(80) not NULL,
 	description text not NULL,
