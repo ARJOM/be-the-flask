@@ -8,7 +8,7 @@ CREATE TABLE ongs(
 );
 
 CREATE TABLE incidents(
-	id serial primary key,
+	id integer primary key autoincrement,
 	title varchar(80) not NULL,
 	description text not NULL,
 	value decimal not NULL,
